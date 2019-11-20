@@ -11,6 +11,7 @@ import (
 	"syscall"
 
 	"github.com/stianeikeland/go-rpio"
+	"github.com/yryz/ds18b20"
 )
 
 var pin rpio.Pin
@@ -39,7 +40,19 @@ func main() {
 			os.Exit(1)
 		}()
 
-		pin.Output()
+		sensors, err := ds18b20.Sensors()
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Printf("sensor IDs: %v\n", sensors)
+
+		for _, sensor := range sensors {
+			t, err := ds18b20.Temperature(sensor)
+			if err == nil {
+				fmt.Printf("sensor: %s temperature: %.2f°C\n", sensor, t)
+			}
+		}
 
 	}
 	fmt.Println("Setting up http handlers")
