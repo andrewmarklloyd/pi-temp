@@ -1,0 +1,35 @@
+<html>
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Pi Temp</title>
+  </head>
+  <body class="bg-dark">
+    <div class="container">
+      <div class="row mt-1">
+        <div class="col-lg mt-1">
+          <h1 class="display-1 text-center text-light"><b>Pi Temp</b></h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md col-md-offset-3" style="height: 300px">
+          <form action="/switch?op=on" method="post" enctype="application/x-www-form-urlencoded" target="formDestination">
+            <button class="btn btn-large btn-block btn-success h-100" type="submit" value="ON">
+              <span class="display-2">ON</span>
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-md col-md-offset-1" style="height: 300px">
+          <form action="/switch?op=off" method="post" enctype="application/x-www-form-urlencoded" target="formDestination">
+            <button class="btn btn-large btn-block btn-danger h-100" type="submit" value="OFF">
+              <span class="display-2">OFF</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <iframe style="display: none;" name="formDestination"></iframe>
+  </body>
+  <link rel="stylesheet" href="/bootstrap.css">
+</html>
