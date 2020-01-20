@@ -1,15 +1,13 @@
 language: go
 go:
-  - 1.13.1
+- 1.13.1
 script:
-  - ./util.sh build
+- "./util.sh build"
 deploy:
   provider: releases
   api_key:
-    secure: sDREX1wTX7CpMRU4C8fJGmQrdJGaNYwbIL8vbOb6QsYgJow4Ju3SsCf57tQdFaaAilTQ77LsgH+70/MjZgFSIar5hyHuhGZJU/4Tgkw9WT6jhm0Nri9Rlfm0DhrnOWWgX2abWfAG3Y8806/c1WjIOCm1S94/lKPilxGPjLNvfj1w0CPmBMmX/Jrw+orQHbTNq/cNGEuGU+wx3w8oElPu19GwdTOpf+68oAwuMrugsiFmDfWFWlzpq7P0Yn7rCdo6YBlGjWbtdMSdAWH0ANhhRdKA6snLHls6d4KymWzCgnhGn+/92ST9Ah03qzdFxYTT1LchUxvw3jGa6/YKpSOmkT06dVXMK7wUSWAmnl+/T1SUa0mdk+OTwZynuW0Qj/L1/wN1xrgn+R1LCjd0AsYX6wD6NTfydiYsz8a2vkgVlSn7uhkjCMOJIo9r73Ub+L9ldBdJZEmJGRsyEaSZ5uO3fie8wrpDyJfqc1EdccXq1eLMbPtXpW2zig1+GxDXHKL03SkhYLCwrjSC6FC1aiYnOdRhWTEf0skuc/j/0jx6NYdmXaitoO/v+e3yXv74b3Yw+kLyc1FqZKnkPiMAux9V8TQogK6DRe+m1fB3+Ys6dsypixz81lmxFPwMSO9Hc6sDJjF95K4J9ZXwjBveolDIT7aa6a9LVqSG3NayH9HozeA=
-  file:
-    - pi-temp
-  skip_cleanup: true
+    secure: RYcPk8DZHjE3F6dWaRLOoXsitPu6A2fXeqCm+lTnGde5at6dh1+12uDRmdo6W2hTAqHxmquZ55A+oS1KiKl29IJOX3pRF/ebGGx6DsKZXjrGqSONAmCxxz8Rx0Vuh7pBI2jrJs89tJ1hfb8YykMUNjhnDtFyMuN+wg3OXBa/pVPlBp1VYBy13FePMYWR/G5OaOyMe9VK+uFYsmrJhNqZCAaFm2KRXcL7rDDkRxIWw3Fqcg6GKEj19KI4n2NrOKAobj+LYK7+nd675gKEErYUxbfHKkRTR8SMdkhlrE5KAxTVHkLdaj9+231uouYaJkA83znffT9LRFlBYgyCPmceRpzfU2bqpko42ZIGd583VWU1qiiR/DXeCgLgLaHhK11tnpFexT5kfne7sxsPB8dxRaMbiFmJ+6avhrQr1kun4N+jyuqI47drAw07WfFV+FOFTEu9t29tbDVA2v9sHldAOt7OXEjFT2OmVO4lE9Ydvbeo/LZShcI2otaSVUyxIYji43Ol5H75J+4aMfw7oenS5k5bQDUMwsorHZktWTaoSxQWkg2PbGEGzpMGHWpCHV8zgjydd38KNjRVkIGeRR2pJOhb1lDgP2mmR401vfdweCur9diTHhpVrC4V4tot2ukO9d/5C0bSRvy5qfOl3UlBY4+LvUFoQyGC7ZUy1k56Kag=
+  file: pi-temp
   on:
     repo: andrewmarklloyd/pi-temp
     tags: true
