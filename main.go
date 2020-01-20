@@ -118,7 +118,7 @@ func systemHandler(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprintf(w, "command not recognized")
 	}
 	fmt.Printf("Running command: %s\n", command)
-	fmt.Println(debugMode)
+
 	if command != "" && !debugMode {
 		cmd := exec.Command(command, args...)
 		var out bytes.Buffer
