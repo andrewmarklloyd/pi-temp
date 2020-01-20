@@ -1,5 +1,5 @@
 [Unit]
-Description=Pi Temp
+Description=Pi-Temp
 After=network.target
 
 [Service]
