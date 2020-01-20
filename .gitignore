@@ -1,2 +1,4 @@
 pi-temp
-config
+config.yml
+version
+latestVersion
