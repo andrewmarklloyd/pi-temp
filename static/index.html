@@ -62,6 +62,10 @@
     </div>
     <script type="text/javascript" src="static/app.js"></script>
     <script type="text/javascript" src="static/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+    <script>
+      const socket = io("http://localhost:8000/socket.io/");
+    </script>
     <iframe style="display: none;" name="formDestination"></iframe>
   </body>
 </html>

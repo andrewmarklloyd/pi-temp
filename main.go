@@ -11,6 +11,7 @@ import (
 	"os/exec"
 	"text/template"
 
+	"github.com/andrewmarklloyd/internal/pkg/socket"
 	"github.com/robfig/cron/v3"
 	"github.com/spf13/viper"
 	"github.com/yryz/ds18b20"
@@ -57,12 +58,6 @@ func main() {
 		fmt.Println("unable to open version", err)
 		os.Exit(1)
 	}
-	currentTemp()
-	cronLib = cron.New()
-	cronLib.AddFunc("@every 5m", func() {
-		currentTemp()
-	})
-	cronLib.Start()
 
 	fmt.Println("Setting up http handlers")
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -91,8 +86,11 @@ func main() {
 			}
 		}
 	})
+	server := socket.Init()
+	http.Handle("/socket.io/", server)
 	http.HandleFunc("/system", systemHandler)
 	http.ListenAndServe("0.0.0.0:8080", nil)
+
 }
 
 func currentTemp() {
