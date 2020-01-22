@@ -11,7 +11,7 @@ import (
 	"os/exec"
 	"text/template"
 
-	"github.com/andrewmarklloyd/internal/pkg/socket"
+	"github.com/andrewmarklloyd/pi-temp/internal/pkg/socket"
 	"github.com/robfig/cron/v3"
 	"github.com/spf13/viper"
 	"github.com/yryz/ds18b20"
@@ -164,7 +164,7 @@ func writeConfig(cfg config) {
 }
 
 func readConfig() config {
-	viper.SetConfigName("config.yml")
+	viper.SetConfigFile("config.yml")
 	viper.AddConfigPath(currentdir())
 	err := viper.ReadInConfig()
 	if err != nil {

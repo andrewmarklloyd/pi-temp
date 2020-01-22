@@ -7,7 +7,7 @@ import (
 	socketio "github.com/googollee/go-socket.io"
 )
 
-func Init() socketio.Server {
+func Init() *socketio.Server {
 	server, err := socketio.NewServer(nil)
 	if err != nil {
 		log.Fatal(err)
@@ -40,5 +40,5 @@ func Init() socketio.Server {
 	go server.Serve()
 	defer server.Close()
 
-	return *server
+	return server
 }
