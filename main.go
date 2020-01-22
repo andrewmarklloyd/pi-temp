@@ -14,6 +14,7 @@ import (
 	"github.com/robfig/cron/v3"
 	"github.com/spf13/viper"
 	"github.com/stianeikeland/go-rpio"
+	"github.com/yryz/ds18b20"
 	yaml "gopkg.in/yaml.v2"
 )
 
@@ -42,6 +43,9 @@ var cronLib *cron.Cron
 func main() {
 	cfg = readConfig()
 	debugMode = cfg.Server.Debug
+
+	setupSensors()
+
 	version, err := ioutil.ReadFile("static/version")
 	if err != nil {
 		fmt.Println("unable to open version", err)
@@ -77,6 +81,22 @@ func main() {
 	})
 	http.HandleFunc("/system", systemHandler)
 	http.ListenAndServe("0.0.0.0:8080", nil)
+}
+
+func setupSensors() {
+	sensors, err := ds18b20.Sensors()
+	if err != nil {
+		fmt.Println("Error setting up sensors:", err)
+	} else {
+		fmt.Printf("sensor IDs: %v\n", sensors)
+
+		for _, sensor := range sensors {
+			t, err := ds18b20.Temperature(sensor)
+			if err == nil {
+				fmt.Printf("sensor: %s temperature: %.2f°C\n", sensor, t)
+			}
+		}
+	}
 }
 
 func checkForUpdates() {
