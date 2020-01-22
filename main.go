@@ -58,6 +58,11 @@ func main() {
 		os.Exit(1)
 	}
 	currentTemp()
+	cronLib = cron.New()
+	cronLib.AddFunc("@every 5m", func() {
+		currentTemp()
+	})
+	cronLib.Start()
 
 	fmt.Println("Setting up http handlers")
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
