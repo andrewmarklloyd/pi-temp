@@ -3,6 +3,10 @@
 sudo apt-get update
 sudo apt-get install jq -y
 
+echo 'dtoverlay=w1-gpio' | sudo tee -a /boot/config.txt
+sudo modprobe w1-gpio
+sudo modprobe w1-therm
+
 archive_path="/tmp/pi-temp"
 install_dir="/home/pi"
 mkdir -p ${archive_path}
