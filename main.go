@@ -13,7 +13,6 @@ import (
 
 	"github.com/robfig/cron/v3"
 	"github.com/spf13/viper"
-	"github.com/stianeikeland/go-rpio"
 	"github.com/yryz/ds18b20"
 	yaml "gopkg.in/yaml.v2"
 )
@@ -34,23 +33,31 @@ type HomePageData struct {
 	Debug         bool
 }
 
-var pin rpio.Pin
-var pinNumber int
 var debugMode bool
 var cfg config
 var cronLib *cron.Cron
+var sensor string
 
 func main() {
 	cfg = readConfig()
 	debugMode = cfg.Server.Debug
 
-	setupSensors()
+	sensors, err := ds18b20.Sensors()
+	if err != nil {
+		fmt.Println("Error setting up sensors:", err)
+		if !debugMode {
+			os.Exit(1)
+		}
+	} else {
+		sensor = sensors[0]
+	}
 
 	version, err := ioutil.ReadFile("static/version")
 	if err != nil {
 		fmt.Println("unable to open version", err)
 		os.Exit(1)
 	}
+	currentTemp()
 
 	fmt.Println("Setting up http handlers")
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -83,20 +90,10 @@ func main() {
 	http.ListenAndServe("0.0.0.0:8080", nil)
 }
 
-func setupSensors() {
-	sensors, err := ds18b20.Sensors()
-	if err != nil {
-		fmt.Println("Error setting up sensors:", err)
-	} else {
-		fmt.Printf("sensor IDs: %v\n", sensors)
-
-		for _, sensor := range sensors {
-			t, err := ds18b20.Temperature(sensor)
-			if err == nil {
-				fmt.Printf("sensor: %s temperature: %.2f°C\n", sensor, t)
-			}
-		}
-	}
+func currentTemp() {
+	celcius, _ := ds18b20.Temperature(sensor)
+	temp := (celcius * (9 / 5)) + 32
+	fmt.Println(temp)
 }
 
 func checkForUpdates() {
