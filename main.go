@@ -86,11 +86,9 @@ func main() {
 			}
 		}
 	})
-	server := socket.Init()
-	http.Handle("/socket.io/", server)
+	socket.Init()
 	http.HandleFunc("/system", systemHandler)
-	http.ListenAndServe("0.0.0.0:8080", nil)
-
+	// http.ListenAndServe("0.0.0.0:8080", nil)
 }
 
 func currentTemp() {

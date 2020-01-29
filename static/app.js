@@ -45,3 +45,27 @@ function systemUpdate() {
     }, 600);
   }
 }
+
+
+window.addEventListener("load", function(evt) {
+    var ws = new WebSocket("ws://localhost:8080/ws");
+    ws.onopen = function(evt) {
+        console.log("OPEN");
+        setTimeout(() => {
+          ws.send("hello");
+        }, 1000)
+    }
+    ws.onclose = function(evt) {
+        console.log("CLOSE");
+        ws = null;
+    }
+
+    ws.onmessage = function(evt) {
+        console.log("RESPONSE: " + evt.data);
+    }
+
+    ws.onerror = function(evt) {
+        console.log("ERROR: " + evt.data);
+    }
+
+});

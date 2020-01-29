@@ -3,42 +3,60 @@ package socket
 import (
 	"fmt"
 	"log"
+	"net/http"
+	"time"
 
-	socketio "github.com/googollee/go-socket.io"
+	"github.com/gorilla/websocket"
+	"github.com/robfig/cron/v3"
 )
 
-func Init() *socketio.Server {
-	server, err := socketio.NewServer(nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	server.OnConnect("/", func(s socketio.Conn) error {
-		s.SetContext("")
-		fmt.Println("connected:", s.ID())
-		return nil
-	})
-	server.OnEvent("/", "notice", func(s socketio.Conn, msg string) {
-		fmt.Println("notice:", msg)
-		s.Emit("reply", "have "+msg)
-	})
-	server.OnEvent("/chat", "msg", func(s socketio.Conn, msg string) string {
-		s.SetContext(msg)
-		return "recv " + msg
-	})
-	server.OnEvent("/", "bye", func(s socketio.Conn) string {
-		last := s.Context().(string)
-		s.Emit("bye", last)
-		s.Close()
-		return last
-	})
-	server.OnError("/", func(e error) {
-		fmt.Println("meet error:", e)
-	})
-	server.OnDisconnect("/", func(s socketio.Conn, reason string) {
-		fmt.Println("closed", reason)
-	})
-	go server.Serve()
-	defer server.Close()
+var upgrader = websocket.Upgrader{}
 
-	return server
+const (
+	// Time allowed to write a message to the peer.
+	writeWait = 10 * time.Second
+
+	// Maximum message size allowed from peer.
+	maxMessageSize = 8192
+
+	// Time allowed to read the next pong message from the peer.
+	pongWait = 60 * time.Second
+
+	// Send pings to peer with this period. Must be less than pongWait.
+	pingPeriod = (pongWait * 9) / 10
+
+	// Time to wait before force close on connection.
+	closeGracePeriod = 10 * time.Second
+)
+
+func serveWs(w http.ResponseWriter, r *http.Request) {
+	ws, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Println("upgrade:", err)
+		return
+	}
+
+	defer ws.Close()
+
+	cronLib := cron.New()
+	cronLib.AddFunc("@every 3s", func() {
+		ws.WriteMessage(websocket.TextMessage, []byte("testing"))
+	})
+	cronLib.Start()
+
+	ws.SetReadLimit(maxMessageSize)
+	ws.SetReadDeadline(time.Now().Add(pongWait))
+	ws.SetPongHandler(func(string) error { ws.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+	for {
+		_, message, err := ws.ReadMessage()
+		if err != nil {
+			break
+		}
+		fmt.Println("recv: " + string(message))
+	}
+}
+
+func Init() {
+	http.HandleFunc("/ws", serveWs)
+	log.Fatal(http.ListenAndServe("localhost:8080", nil))
 }
