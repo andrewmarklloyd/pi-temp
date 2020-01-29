@@ -61,7 +61,10 @@ window.addEventListener("load", function(evt) {
     }
 
     ws.onmessage = function(evt) {
-        console.log("RESPONSE: " + evt.data);
+      x = document.getElementById("temp")
+      x.innerHTML = evt.data
+      x.style.color = "red"
+      // console.log("RESPONSE: " + evt.data);
     }
 
     ws.onerror = function(evt) {

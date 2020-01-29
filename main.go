@@ -43,16 +43,6 @@ func main() {
 	cfg = readConfig()
 	debugMode = cfg.Server.Debug
 
-	sensors, err := ds18b20.Sensors()
-	if err != nil {
-		fmt.Println("Error setting up sensors:", err)
-		if !debugMode {
-			os.Exit(1)
-		}
-	} else {
-		sensor = sensors[0]
-	}
-
 	version, err := ioutil.ReadFile("static/version")
 	if err != nil {
 		fmt.Println("unable to open version", err)

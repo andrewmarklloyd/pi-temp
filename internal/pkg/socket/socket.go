@@ -8,9 +8,11 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/robfig/cron/v3"
+	"github.com/yryz/ds18b20"
 )
 
 var upgrader = websocket.Upgrader{}
+var sensor string
 
 const (
 	// Time allowed to write a message to the peer.
@@ -39,8 +41,9 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 	defer ws.Close()
 
 	cronLib := cron.New()
-	cronLib.AddFunc("@every 3s", func() {
-		ws.WriteMessage(websocket.TextMessage, []byte("testing"))
+	cronLib.AddFunc("@every 1s", func() {
+
+		ws.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf("%f", currentTemp())))
 	})
 	cronLib.Start()
 
@@ -57,6 +60,20 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 }
 
 func Init() {
+	sensors, err := ds18b20.Sensors()
+	if err != nil {
+		fmt.Println("Error setting up sensors:", err)
+	} else {
+		sensor = sensors[0]
+		currentTemp()
+	}
+
 	http.HandleFunc("/ws", serveWs)
 	log.Fatal(http.ListenAndServe("localhost:8080", nil))
+}
+
+func currentTemp() float64 {
+	celcius, _ := ds18b20.Temperature(sensor)
+	temp := (celcius * (9 / 5)) + 32
+	return temp
 }
