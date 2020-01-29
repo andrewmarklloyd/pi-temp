@@ -48,7 +48,7 @@ function systemUpdate() {
 
 
 window.addEventListener("load", function(evt) {
-    var ws = new WebSocket("ws://localhost:8080/ws");
+    var ws = new WebSocket(`ws://${location.host}/ws`);
     ws.onopen = function(evt) {
         console.log("OPEN");
         setTimeout(() => {

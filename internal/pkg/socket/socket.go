@@ -60,6 +60,7 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 }
 
 func Init() {
+	fmt.Println("setting up websockets")
 	sensors, err := ds18b20.Sensors()
 	if err != nil {
 		fmt.Println("Error setting up sensors:", err)
@@ -69,7 +70,7 @@ func Init() {
 	}
 
 	http.HandleFunc("/ws", serveWs)
-	log.Fatal(http.ListenAndServe("localhost:8080", nil))
+	log.Fatal(http.ListenAndServe("0.0.0.0:8080", nil))
 }
 
 func currentTemp() float64 {
